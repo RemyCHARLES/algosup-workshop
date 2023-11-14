@@ -1,20 +1,23 @@
 org 100h
 
-; -----------------------------------------------
-; We declare some initialized data.
 section .data
-    hello db 'Hello, World!$'   ; DOS printable string must be terminated by a dollar sign.
+    hello db 'Hello, World!', 0
 
-; -----------------------------------------------
-; This section host code.
 section .text
+ 
+    mov si, hello    
 
-    ; Print the message to the screen
-    mov ah, 9       ; AH=9 means "print string" function
-    mov dx, hello   ; Load the offset address of 'hello' into DX
-    int 21h         ; Call the DOS interrupt 21h to execute the function
+print_string:
 
-    ; Exit the program
-    mov ah, 4Ch     ; AH=4Ch means "exit" function
-    xor al, al      ; Set AL to 0 (return code)
-    int 21h         ; Call the DOS interrupt 21h to exit the program
+    lodsb       
+    cmp al, 0          
+    je end_print         
+    mov ah, 0Eh          
+    int 10h                            
+    jmp print_string     
+
+end_print:
+
+    mov ah, 4Ch          
+    xor al, al           
+    int 21h             
