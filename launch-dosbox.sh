@@ -5,7 +5,6 @@ BIN_DIR="$ROOT_DIR/bin"
 DOSBOX_BIN="/opt/homebrew/bin/dosbox"
 CONFIG_LOC="$ROOT_DIR"
 
+"$DOSBOX_BIN" -c "MOUNT c $BIN_DIR" -c "C:" -c "keyb fr"
 
-x"$DOSBOX_BIN" -conf "$CONFIG_LOC"
 
-"$DOSBOX_BIN" -c "MOUNT c $BIN_DIR"

@@ -7,6 +7,6 @@ rootDir="$(cd "$thisDir/../../.." && pwd)"
 binDir="$rootDir/bin"
 
 cd "${thisDir}" \
-  && nasm HelloWorld.asm -f bin -o "${binDir}/hello.com" \
+  && nasm memwatch.asm -f bin -o "${binDir}/memwatch.com" \
 
 echo "Builded Successfully! ✅"
