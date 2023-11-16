@@ -7,7 +7,7 @@ rootDir="$(cd "$thisDir/../../.." && pwd)"
 binDir="$rootDir/bin"
 
 cd "${thisDir}" \
-  && nasm graphics.asm -f bin -o "${binDir}/graphics.com" \
+  && nasm sprite.asm -f bin -o "${binDir}/sprite.com" \
 
 echo "Built Successfully! ✅"
 
@@ -16,4 +16,4 @@ BIN_DIR="$ROOT_DIR/../../../bin"
 DOSBOX_BIN="/opt/homebrew/bin/dosbox"
 CONFIG_LOC="$ROOT_DIR"
 
-"$DOSBOX_BIN" -c "MOUNT c $BIN_DIR" -c "C:" -c "keyb fr" -c "graphics.com"
+"$DOSBOX_BIN" -c "MOUNT c $BIN_DIR" -c "C:" -c "keyb fr" -c "sprite.com"
