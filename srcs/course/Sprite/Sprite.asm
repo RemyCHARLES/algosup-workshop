@@ -1,13 +1,28 @@
 org 100h
 
 section .data 
-sprite db 0x00,0xFF,0x0F,0xAA,0xBB,0x0F,0xFF,0x00
-       db 0x00,0xFF,0x0F,0xAA,0xBB,0x0F,0xFF,0x00
-       db 0x00,0xFF,0x0F,0xAA,0xBB,0x0F,0xFF,0x00
-       db 0x00,0xFF,0x0F,0xAA,0xBB,0x0F,0xFF,0x00
-       db 0x00,0xFF,0x0F,0xAA,0xBB,0x0F,0xFF,0x00
-       db 0x00,0xFF,0x0F,0xAA,0xBB,0x0F,0xFF,0x00
-       db 0x00,0xFF,0x0F,0xAA,0xBB,0x0F,0xFF,0x00
+; draw blinky in pacman 
+Blinky db 0,0,0,0,0,0,0,0
+       db 0,0,0,0,0,0,0,0
+       db 0,0,0,0,0,0,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,1,1,1,1,0,0
+       db 0,0,1,1,1,1,0,0
+       db 0,0,1,1,1,1,0,0
+       db 0,0,1,1,1,1,0,0
+       db 0,0,1,1,1,1,0,0
+       db 0,0,1,1,1,1,0,0
+       db 0,0,1,1,1,1,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,0,1,1,0,0,0
+       db 0,0,0,0,0,0,0,0
+       db 0,0,0,0,0,0,0,0
 
 
 section .text
@@ -47,7 +62,7 @@ printSprite:
 mov ax, 0xA000
 mov es, ax
 mov di, 0
-mov si, sprite
+mov si, Blinky
 mov dx, 8
 eachLine:
 mov cx, 8
@@ -57,4 +72,15 @@ dec dx
 jnz eachLine
 ret
 
+draw_ghost:
+mov ax, 0xA000
+mov es, ax
+mov dx, 8
+    .eachLine:
+    mov cx, 8
+    rep movsb
+    add di, 320-8
+    dec dx
+    jnz .eachLine
+    ret
 
