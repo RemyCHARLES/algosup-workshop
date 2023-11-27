@@ -1,13 +1,12 @@
 org 100h
  
-%define SPRITEW dw 8
+%define SPRITEW 8
 section .data
 
 
 xPos dw 0 
 xVelocity dw 1 
 
-spritew dw 8
 
 
 blinky db 0x00, 0x00, 0x28, 0x28, 0x28, 0x28, 0x00, 0x00
@@ -47,6 +46,9 @@ pinky db 0x00, 0x00, 0x54, 0x54, 0x54, 0x54, 0x00, 0x00
         db 0x54, 0x00, 0x54, 0x54, 0x00, 0x54, 0x54, 0x54
 
  
+section .bss
+
+    backBufferSeg resw 1   
 
  
 section .text
@@ -55,22 +57,38 @@ section .text
    mov al, 13h ; set video mode option o 320 x 200 256 colors
    int 10h
 
+    mov [backBufferSeg], ax
+
    gameloop:
+   call gfxWaitForVSync
    mov al, 0FFh
-   call clearScreen
+   ;call clearScreen
    ;call printSprite
    ; call the
     mov si, blinky
     mov di, [xPos]
+    cmp word [xVelocity], 0
+    call changeSprite
+
    call draw_ghost
 
    ; this loop is to slow down the game
     mov cx, 20000
    waitloop:
     loop waitloop
-    mov ax, [xPos]
-    add ax, [xVelocity]
-    mov [xPos], ax
+
+    ; move the sprite
+    mov bx, [xPos]
+    add bx, [xVelocity]
+    mov [xPos], bx
+
+    ; Bounce:
+    cmp word [xPos], 320 - SPRITEW
+    jb .noflip
+    neg word [xVelocity]
+
+    .noflip:
+    cmp word [xPos], 0
 
    jmp gameloop
 
@@ -121,3 +139,40 @@ draw_ghost:
         dec dx
         jnz .eachLine
         ret
+
+; Change the color of the ghost when it touches the wall 
+changeSprite:
+    jg .clyde
+    mov si, clyde
+    .clyde:
+    ret
+
+; -----------------------------------------------
+; Wait for vertical sync.
+; scraps ax and dx
+gfxWaitForVSync:
+   mov dx, 0x3DA
+.loop1:
+   in al, dx
+   test al, 8
+   jnz .loop1
+.loop2:
+   in al, dx
+   test al, 8
+   jz .loop2
+   ret
+
+presentBackBuffer:
+push ds
+push cx
+    mov ax, [backBufferSeg]
+    mov ds, ax
+    mov ax, [backBufferSeg]
+    mov ds, ax
+    xor si, si
+    xor di, di
+    mov cx, 320*200
+    rep movsb
+    pop cx
+    pop ds
+    ret
